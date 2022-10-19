@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+spock-0.6-groovy-1.8 build file
+Taken from gil cattaneo <puntogil@libero.it>
+http://pkgs.fedoraproject.org/cgit/spock.git/
+-->
+<project name="build-spock" default="dist" basedir="..">
+      
+   <property name="impl.version" value="0.7-groovy-2.0"/>
+      
+   <property name="core.dir"                   value="${basedir}/spock-core"/>
+   <property name="core.src.dir"               value="${core.dir}/src/main/"/>
+   <property name="core.src.dir.groovy"        value="${core.dir}/src/main/groovy/"/>
+   <property name="core.src.dir.java"          value="${core.dir}/src/main/java/"/>
+   <property name="core.resources.dir"         value="${core.dir}/src/main/resources/"/>
+   <property name="core.build.dir"             value="${core.dir}/build"/>
+      
+   <property name="guice.dir"                  value="${basedir}/spock-guice"/>
+   <property name="guice.src.dir"              value="${guice.dir}/src/main/java"/>
+   <property name="guice.build.dir"            value="${guice.dir}/build"/>
+      
+   <path id="groovyc.classpath">
+    <fileset dir="/usr/share/java" includes="commons-cli.jar"/>
+    <fileset dir="/usr/share/java" includes="groovy-all.jar"/>
+    <fileset dir="/usr/share/java" includes="asm-all.jar"/>
+    <fileset dir="/usr/share/java" includes="antlr.jar"/>
+   </path>
+      
+   <path id="core.classpath">
+    <path refid="groovyc.classpath"/>
+    <pathelement location="${core.build.dir}/**"/>
+    <fileset dir="/usr/share/java" includes="ant.jar"/>
+    <fileset dir="/usr/share/java" includes="cglib-nodep.jar"/>
+    <fileset dir="/usr/share/java" includes="hamcrest-core.jar"/>
+    <fileset dir="/usr/share/java" includes="hamcrest-library.jar"/>
+    <fileset dir="/usr/share/java" includes="junit4.jar"/>
+    <fileset dir="/usr/share/java" includes="objenesis.jar"/>
+   </path>
+      
+   <path id="guice.classpath">
+    <path refid="groovyc.classpath"/>
+    <pathelement location="${core.build.dir}/**"/>
+    <fileset dir="${core.dir}/build/libs" includes="spock-core-${impl.version}.jar"/>
+    <fileset dir="/usr/share/java" includes="aopalliance.jar"/>
+    <fileset dir="/usr/share/java" includes="guice.jar"/>
+   </path>
+      
+   <path id="javadoc.classpath">
+    <path refid="groovyc.classpath"/>
+    <fileset dir="${core.dir}/build/libs" includes="spock-core-${impl.version}.jar"/>
+    <fileset dir="${guice.dir}/build/libs" includes="spock-guice-${impl.version}.jar"/>
+    <fileset dir="/usr/share/java" includes="ant.jar"/>
+    <fileset dir="/usr/share/java" includes="aopalliance.jar"/>
+    <fileset dir="/usr/share/java" includes="cglib-nodep.jar"/>
+    <fileset dir="/usr/share/java" includes="guice.jar"/>
+    <fileset dir="/usr/share/java" includes="hamcrest-core.jar"/>
+    <fileset dir="/usr/share/java" includes="hamcrest-library.jar"/>
+    <fileset dir="/usr/share/java" includes="junit4.jar"/>
+    <fileset dir="/usr/share/java" includes="objenesis.jar"/>
+   </path>
+      
+   <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc"  classpathref="groovyc.classpath"/>
+      
+   <target name="clean">
+    <delete dir="${guice.build.dir}"/>
+    <delete dir="${core.build.dir}"/>
+    <delete dir="dist"/>
+   </target>
+      
+   <target name="init">
+     <mkdir dir="dist"/>
+   </target>
+      
+   <target name="build" 
+      depends="build.core,build.guice" description="Compile the sources">
+   </target>
+      
+   <target name="build.core" description="Build Spock Core">
+    <compile-groovy
+      buildclasspath="core.classpath"
+      dirsrc="${core.src.dir}"
+      destfile="${core.build.dir}">
+      </compile-groovy>
+    <mkdir dir="${core.build.dir}/META-INF/services"/>
+    <copy todir="${core.build.dir}/META-INF/services" overwrite="true">
+      <fileset dir="${core.resources.dir}/META-INF/services" includes="**/org.*"/>
+    </copy>
+      
+    <jar-and-manifest
+      basedir="${core.build.dir}"
+      destfile="core"
+      dest="${core.dir}/build/libs"
+      resources=""
+      cpath=""/>
+   </target>
+      
+   <target name="build.guice" description="Build Spock Guice">
+    <compile-javac
+      buildclasspath="guice.classpath"
+      dirsrc="${guice.src.dir}"
+      destfile="${guice.build.dir}"/>
+      
+    <jar-and-manifest
+      basedir="${guice.build.dir}"
+      destfile="guice"
+      dest="${guice.dir}/build/libs"
+      resources=""
+      cpath=""/>
+   </target>
+      
+   <macrodef name="compile-groovy">
+    <attribute name="destfile"/>
+    <attribute name="dirsrc"/>
+    <attribute name="excludes" default=""/>
+    <attribute name="includes" default=""/>
+    <attribute name="buildclasspath" default=""/>
+    <sequential>
+    <mkdir dir="@{destfile}"/>
+      <groovyc
+        srcdir="@{dirsrc}"
+        destdir="@{destfile}"
+        classpathref="@{buildclasspath}">
+        <javac source="1.8" target="1.8" debug="on"/>
+      </groovyc>
+    </sequential>
+   </macrodef>
+      
+   <macrodef name="compile-javac">
+    <attribute name="destfile"/>
+    <attribute name="dirsrc"/>
+    <attribute name="excludes" default=""/>
+    <attribute name="includes" default=""/>
+    <attribute name="buildclasspath" default=""/>
+    <sequential>
+    <mkdir dir="@{destfile}"/>
+      <javac
+        srcdir="@{dirsrc}"
+        destdir="@{destfile}"
+        classpathref="@{buildclasspath}"
+        source="1.8" target="1.8" debug="on">
+      </javac>
+    </sequential>
+   </macrodef>
+      
+   <macrodef name="jar-and-manifest">
+    <attribute name="destfile"/>
+    <attribute name="basedir"/>
+    <attribute name="dest"/>
+    <attribute name="cpath" default=""/>
+    <attribute name="excludes" default=""/>
+    <attribute name="includes" default="**/*"/>
+    <attribute name="resources" default=""/>
+    <attribute name="param" default=""/>
+    <attribute name="paramvalue" default=""/>
+    <sequential>
+      <jar destfile="@{dest}/spock-@{destfile}-${impl.version}.jar"
+        basedir="@{basedir}"
+        excludes="@{excludes}"
+        includes="@{includes}">
+      </jar>
+    </sequential>
+   </macrodef>
+      
+  <target name="dist" depends="init,build,javadoc"
+        description="generate the distribution" >
+  </target>
+      
+  <target name="javadoc">
+    <mkdir dir="dist/api"/>
+    <tstamp>
+      <format property="year" pattern="yyyy" />
+    </tstamp>
+    <javadoc
+      destdir="dist/api"
+      sourcepath="${core.src.dir.java}:${guice.src.dir}"
+      source="1.8"
+      access="protected"
+      old="false"
+      verbose="false"
+      version="true"
+      locale="en"
+      use="true"
+      author="true"
+      windowtitle="Spock Framework ${impl.version}">
+      <classpath refid="javadoc.classpath"/>
+      <doctitle><![CDATA[<h2>Spock Framework ${impl.version}</h2>]]></doctitle>
+      <bottom><![CDATA[<i>Copyright &#169; ${year}. All rights reserved</i>]]></bottom>
+      <group title="Spock Core" packages="spock.config,spock.lang,spock.util.concurrent,spock.util.matcher,spock.util.mop,org.spockframework.builder,org.spockframework.buildsupport,org.spockframework.buildsupport.ant,org.spockframework.compiler,org.spockframework.compiler.model,org.spockframework.gentyref,org.spockframework.lang,org.spockframework.mock,org.spockframework.runtime,org.spockframework.runtime.condition,org.spockframework.runtime.extension,org.spockframework.runtime.extension.builtin,org.spockframework.runtime.model,org.spockframework.util,org.spockframework.util.inspector"/>
+      <group title="Spock Guice" packages="spock.guice,org.spockframework.guice"/>
+    </javadoc>
+  </target>
+      
+</project>

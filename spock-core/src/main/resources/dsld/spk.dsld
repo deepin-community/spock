@@ -1,0 +1,47 @@
+/*
+ * Copyright 2012 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package dsld
+
+import org.codehaus.groovy.ast.expr.*
+
+// uses at least one fix made in 2.7.1 (see Groovy Eclipse mailing list), so play it safe
+assertVersion(groovyEclipse: "2.7.1")
+
+// with(foo) { /* delegates to foo */ }
+// currently only works if foo is statically typed
+contribute(
+	enclosingClass(subType("spock.lang.Specification")) &
+	enclosingCallDeclaringType("spock.lang.Specification") &
+	enclosingCall(
+		name("with") &
+		hasArgument(theTypes: type())) &
+	enclosingClosure()) {
+  delegatesTo(theTypes.iterator().next())
+}
+
+// Mock(Foo) { /* delegates to instance of type Foo /* }
+// works for all mock factory methods and all overloads that include a type
+contribute(
+    enclosingClass(subType("spock.lang.Specification")) &
+    enclosingCallDeclaringType("spock.lang.MockingApi") &
+    bind(theCalls: enclosingCall(name("Mock") | name("Stub") | name("Spy") | name("GroovyMock") | name("GroovyStub") | name("GroovySpy"))) &
+	enclosingClosure()) {
+  def args = theCalls.iterator().next().arguments.expressions
+  def mockType = args.find { it instanceof ClassExpression }
+  if (mockType) {
+    delegatesTo(mockType)
+  }
+}
+

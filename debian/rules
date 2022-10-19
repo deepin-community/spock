@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+export JAVA_HOME := /usr/lib/jvm/default-java
+export ANT_ARGS=-f debian/build.xml
+
+%:
+	dh $@ --buildsystem=ant --with maven_repo_helper
+
+get-orig-source:
+	uscan --force-download

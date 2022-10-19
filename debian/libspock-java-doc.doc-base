@@ -1,0 +1,9 @@
+Document: libspock-javadoc
+Title: API Javadoc for libspock-java
+Author: Spock Framework developers
+Abstract: This is the API Javadoc provided by the libspock-java library.
+Section: Programming
+
+Format: HTML
+Index: /usr/share/doc/libspock-java/api/index.html
+Files: /usr/share/doc/libspock-java/api/*

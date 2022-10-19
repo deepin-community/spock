@@ -1,0 +1,19 @@
+Description: Update to ASM 5
+Origin: backport, https://github.com/spockframework/spock/commit/83c2cc7
+--- a/spock-core/src/main/java/org/spockframework/buildsupport/EmptyAnnotationVisitor.java
++++ b/spock-core/src/main/java/org/spockframework/buildsupport/EmptyAnnotationVisitor.java
+@@ -14,12 +14,12 @@
+ 
+ package org.spockframework.buildsupport;
+ 
+-import groovyjarjarasm.asm.Opcodes;
++import org.objectweb.asm.Opcodes;
+ import org.objectweb.asm.AnnotationVisitor;
+ 
+ class EmptyAnnotationVisitor extends AnnotationVisitor {
+   public EmptyAnnotationVisitor() {
+-    super(Opcodes.ASM4);
++    super(Opcodes.ASM5);
+   }
+ 
+   public void visit(String s, Object o) {}

@@ -1,0 +1,58 @@
+Source: spock
+Section: java
+Priority: optional
+Maintainer: Debian Java Maintainers <pkg-java-maintainers@lists.alioth.debian.org>
+Uploaders: Damien Raude-Morvan <drazzib@debian.org>
+Build-Depends:
+ ant,
+ debhelper (>= 11),
+ default-jdk,
+ groovy (>= 2.4.7),
+ junit4,
+ libaopalliance-java,
+ libasm-java (>= 5.0),
+ libcglib-nodep-java,
+ libguice-java,
+ libhamcrest-java,
+ libobjenesis-java,
+ maven-repo-helper (>= 1.5~)
+Standards-Version: 4.1.3
+Vcs-Git: https://anonscm.debian.org/git/pkg-java/spock.git
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-java/spock.git
+Homepage: http://spockframework.org
+
+Package: libspock-java
+Architecture: all
+Depends:
+ ant,
+ groovy (>= 2.4.7),
+ junit4,
+ libaopalliance-java,
+ libasm-java (>= 5.0),
+ libcglib-nodep-java,
+ libguice-java,
+ libhamcrest-java,
+ libobjenesis-java,
+ ${misc:Depends}
+Description: testing and specification framework for Java and Groovy application
+ Spock is a testing and specification framework for Java and Groovy applications
+ .
+ It provide highly expressive specification language.
+ .
+ Spock is compatible with most IDEs, build tools, and
+ continuous integration servers thanks to its JUnit runner.
+
+Package: libspock-java-doc
+Architecture: all
+Section: doc
+Depends: ${misc:Depends}
+Suggests: libspock-java
+Description: testing and specification framework for Java and Groovy - Docs
+ Spock is a testing and specification framework for Java and Groovy applications
+ .
+ It provide highly expressive specification language.
+ .
+ Spock is compatible with most IDEs, build tools, and
+ continuous integration servers thanks to its JUnit runner.
+ .
+ This package contains Javadoc API for libspock-java.

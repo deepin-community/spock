@@ -1,0 +1,19 @@
+apply from: script("publishMaven")
+
+displayName = "Spock Framework - Core Module"
+
+description = "Spock is a testing and specification framework for Java and Groovy applications. \
+What makes it stand out from the crowd is its beautiful and highly expressive specification language. \
+Thanks to its JUnit runner, Spock is compatible with most IDEs, build tools, and continuous integration servers. \
+Spock is inspired from JUnit, jMock, RSpec, Groovy, Scala, Vulcans, and other fascinating life forms."
+
+dependencies {
+  compile libs.groovy // simplest way to add Groovy dependency to POM
+  compile libs.junit
+
+  compile libs.ant, optional
+  compile libs.asm, optional
+  compile libs.cglib, optional
+  compile libs.objenesis, optional
+}
+

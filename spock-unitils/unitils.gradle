@@ -1,0 +1,32 @@
+apply from: script("publishMaven")
+
+displayName = "Spock Framework - Unitils Module"
+
+description = "Spock's Unitils Module makes it possible to use Unitils together with Spock."
+
+dependencies {
+  compile project(":spock-core")
+  compile "org.unitils:unitils-core:3.3"
+
+  // the following are transitive deps of unitils-core with scope compile
+  // nevertheless, if we don't specify them explicitely, groovyc crashes with
+  // NoClassDefFoundError at org.codehaus.groovy.vmplugin.v5.Java5.configureClassNode(Java5.java:285)
+  compile "commons-collections:commons-collections:3.2", internal
+  compile "ognl:ognl:2.6.9", internal
+
+  testCompile "org.unitils:unitils-dbunit:3.3", {
+    exclude module: "jta"
+  }
+  testCompile "org.unitils:unitils-database:3.3",  {
+    exclude module: "jta"
+  }
+
+  // for some reason, groovyc needs junit dependency for compiling tests
+  // otherwise we'll get:
+  // java.lang.NoClassDefFoundError: junit/framework/AssertionFailedError
+  testCompile libs.junit
+
+  testRuntime libs.h2database
+  testRuntime libs.log4j
+}
+

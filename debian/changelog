@@ -1,0 +1,73 @@
+spock (0.7-groovy-2.0-4) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Miguel Landaeta ]
+  * Remove myself from uploaders list. (Closes: #871887)
+  * Wrap and sort dependencies lists.
+  * Simplify d/rules.
+  * Update copyright info.
+
+  [ Emmanuel Bourg ]
+  * Fixed the build failure with Java 9 (Closes: #893417)
+  * Standards-Version updated to 4.1.3
+  * Switch to debhelper level 11
+
+ -- Emmanuel Bourg <ebourg@apache.org>  Fri, 30 Mar 2018 17:38:33 +0200
+
+spock (0.7-groovy-2.0-3) unstable; urgency=medium
+
+  * Team upload.
+  * Add patch for FTBFS with groovy 2.4.7. (Closes: #829111)
+  * Add build-dependency and dependency upon groovy (>= 2.4.7)
+
+ -- tony mancill <tmancill@debian.org>  Fri, 01 Jul 2016 21:39:41 -0700
+
+spock (0.7-groovy-2.0-2) unstable; urgency=medium
+
+  * Team upload.
+  * Depend on groovy instead of groovy2
+  * Depend on libasm-java (>= 5.0) instead of libasm4-java
+  * Depend on libcglib-nodep-java instead of libcglib3-java
+  * Standards-Version updated to 3.9.8 (no changes)
+  * Use a secure Vcs-Git URL
+
+ -- Emmanuel Bourg <ebourg@apache.org>  Tue, 10 May 2016 21:57:00 +0200
+
+spock (0.7-groovy-2.0-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release:
+    - Refreshed the patch
+    - Depend on groovy2 instead of groovy
+    - Refreshed spock-core.pom and spock-guice.pom
+    - Updated the version in debian/build.xml
+    - Updated the --artifact parameters in debian/libspock-java.poms
+  * Improved the reproducibility:
+    - Use an english locale when generating the javadoc
+  * Removed the gradle wrapper from the upstream tarball
+  * debian/control: Updated the Homepage field
+  * Updated debian/watch
+
+ -- Emmanuel Bourg <ebourg@apache.org>  Thu, 01 Oct 2015 12:08:35 +0200
+
+spock (0.6-groovy-1.8-3) unstable; urgency=medium
+
+  * Team upload.
+  * Switch to ASM 5 and CGLIB 3
+  * Standards-Version updated to 3.9.6 (no changes)
+
+ -- Emmanuel Bourg <ebourg@apache.org>  Fri, 03 Oct 2014 23:08:21 +0200
+
+spock (0.6-groovy-1.8-2) unstable; urgency=low
+
+  * Upload to unstable.
+  * d/control: Bump Standards-Version to 3.9.4 (no changes needed).
+
+ -- Damien Raude-Morvan <drazzib@debian.org>  Mon, 06 May 2013 01:33:55 +0200
+
+spock (0.6-groovy-1.8-1) experimental; urgency=low
+
+  * Initial release. (Closes: #607388)
+
+ -- Damien Raude-Morvan <drazzib@debian.org>  Sun, 02 Sep 2012 12:38:23 +0200

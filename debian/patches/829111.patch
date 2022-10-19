@@ -1,0 +1,16 @@
+Description: update ConfigurationScriptLoader for groovy 2.4.7
+ GroovyCodeSource(URL url) constructor no longer throws IOException
+ see: http://docs.groovy-lang.org/2.4.7/html/api/groovy/lang/GroovyCodeSource.html#GroovyCodeSource(java.net.URL)
+Author: tony mancill <tmancill@debian.org>
+
+--- a/spock-core/src/main/java/org/spockframework/runtime/ConfigurationScriptLoader.java
++++ b/spock-core/src/main/java/org/spockframework/runtime/ConfigurationScriptLoader.java
+@@ -126,8 +126,6 @@
+     GroovyShell shell = createShell();
+     try {
+       return (DelegatingScript) shell.parse(new GroovyCodeSource(url));
+-    } catch (IOException e) {
+-      throw new ConfigurationException("Error reading configuration script '%s'", location);
+     } catch (CompilationFailedException e) {
+       throw new ConfigurationException("Error compiling configuration script '%s'", location);
+     }
